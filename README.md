@@ -27,7 +27,25 @@ npm ci && npm run build && node audit/static.mjs && node audit/live.mjs
 ```
 
 Branch `international` is upstream `master` plus these commits; upstream is merged in to stay
-current. Everything below is upstream's README.
+current.
+
+## Help wanted
+
+PPTist is an excellent editor, and its online features are documented and optional upstream.
+This fork exists for people who need something narrower: an editor for slides that may be
+confidential (unpublished research, internal material), in their own language, whose build
+they can **check** sends nothing anywhere, rather than take on trust. Two kinds of help make
+that more useful:
+
+- **Translations.** One JSON file per language, no code: [i18n/README.md](i18n/README.md).
+  Corrections to the English wording are just as welcome.
+- **Review.** Try to break the guarantee. A request the audits miss, a dependency that phones
+  home, a way around the Content-Security-Policy, a Chinese string that reaches the screen:
+  please open an issue (for anything exploitable, say so in the title and leave out the
+  details until it is fixed). Improvements to `audit/` itself are the most valuable kind of
+  pull request here.
+
+Everything below is upstream's README.
 
 ---
 
