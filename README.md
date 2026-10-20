@@ -1,3 +1,36 @@
+# PPTist International
+
+A fork of [PPTist](https://github.com/pipipi-pikachu/PPTist) by pipipi-pikachu (AGPL-3.0) that
+changes three things and nothing else in the editor:
+
+- **English UI**, translated at build time from a dictionary, so the source stays as upstream
+  wrote it and updates merge cleanly. Other languages are one JSON file each: see
+  [i18n/README.md](i18n/README.md); contributions welcome.
+- **No third-party connections.** The AI features (AI slides, AI writing) and the online image
+  library, which went through the author's server, are removed, not hidden; so are the built-in
+  templates (Chinese text, photos fetched from pexels.com), the Google Fonts loader and the
+  sample media URLs. The built page carries a Content-Security-Policy that lets it contact only
+  the server it came from.
+- **Decks as files** (`src/deck-bridge.ts`): with `?deck=edit` the editor loads and saves a plain
+  JSON deck through a small local server (`GET/PUT ../api/deck`); `?deck=player` plays a
+  `deck.json` next to the page read-only; `?deck=view` is a slideshow another page drives with
+  `postMessage({deckSlide: n})`. Without `?deck=` it behaves as upstream (browser storage).
+
+**Checked, not promised:** `node audit/static.mjs` scans the built bundle (every host it names,
+every network call site, the CSP, AI/cloud vocabulary, every Chinese string left with a reason)
+and `node audit/live.mjs` runs it in headless Chrome, clicks through the UI and fails on any
+request leaving 127.0.0.1, any request the CSP had to block, or any Chinese on screen. A control
+run with an injected fetch, image and Chinese label fails as it should.
+
+```bash
+npm ci && npm run build && node audit/static.mjs && node audit/live.mjs
+```
+
+Branch `international` is upstream `master` plus these commits; upstream is merged in to stay
+current. Everything below is upstream's README.
+
+---
+
 <p align="center">
     <img src='/public/logo.png' />
 </p>
