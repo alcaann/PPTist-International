@@ -5,11 +5,14 @@ import Icons from 'unplugin-icons/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
+// English UI at build time + a Content-Security-Policy (no third-party requests): i18n/README.md
+import pptistEnglish from './i18n/i18n-plugin.mjs'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '',
   plugins: [
+    pptistEnglish(),
     vue(),
     Components({
       dirs: [],
@@ -33,13 +36,7 @@ export default defineConfig({
   server: {
     host: '127.0.0.1',
     port: 5173,
-    proxy: {
-      '/api': {
-        target: 'https://server.pptist.cn',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      }
-    }
+    // no proxy to server.pptist.cn: the cloud features are off in this fork
   },
   css: {
     preprocessorOptions: {

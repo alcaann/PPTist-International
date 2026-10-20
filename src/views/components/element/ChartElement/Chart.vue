@@ -63,7 +63,7 @@ const updateOption = () => {
 }
 
 onMounted(() => {
-  chart = echarts.init(chartRef.value, null, { renderer: 'svg' })
+  chart = echarts.init(chartRef.value, null, { renderer: 'svg', locale: 'EN' })  // fork: English chart labels
   updateOption()
 
   const resizeListener = () => chart!.resize()
