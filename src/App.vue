@@ -16,6 +16,7 @@ import { LOCALSTORAGE_KEY_DISCARDED_DB } from '@/configs/storage'
 import { deleteDiscardedDB } from '@/utils/database'
 import { isPC } from '@/utils/common'
 import api from '@/services'
+import { deckLoad } from './deck-bridge'
 
 import Editor from './views/Editor/index.vue'
 import Screen from './views/Screen/index.vue'
@@ -46,7 +47,7 @@ onMounted(async () => {
     }])
     screenStore.setScreening(true)
   }
-  else {
+  else if (!(await deckLoad())) {
     const slides = await api.getMockData('slides')
     slidesStore.setSlides(slides)
 
