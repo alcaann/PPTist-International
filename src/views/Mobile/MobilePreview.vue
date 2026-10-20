@@ -14,21 +14,8 @@
       <Divider type="vertical" style="height: 30px;" />
       <div class="menu-item" @click="changeMode('player')"><i-icon-park-outline:full-screen-play class="icon" /> 播放</div>
       <Divider type="vertical" style="height: 30px;" />
-      <div class="menu-item ai" @click="openAIPPTDialog()">AIPPT</div>
     </div>
   </div>
-
-  <Modal
-    :visible="!!showAIPPTDialog" 
-    :closeOnClickMask="false"
-    :closeOnEsc="false"
-    :width="width"
-    closeButton
-    :wrapStyle="{ opacity: showAIPPTDialog === 'running' ? 0 : 1 }"
-    @closed="closeAIPPTDialog()"
-  >
-    <AIPPTDialog />
-  </Modal>
 </template>
 
 <script lang="ts" setup>
@@ -41,7 +28,6 @@ import type { Mode } from '@/types/mobile'
 import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
 import Divider from '@/components/Divider.vue'
 import Modal from '@/components/Modal.vue'
-import AIPPTDialog from '../Editor/AIPPTDialog.vue'
 
 defineProps<{
   changeMode: (mode: Mode) => void
@@ -50,10 +36,6 @@ defineProps<{
 const { slides } = storeToRefs(useSlidesStore())
 const { slidesLoadLimit } = useLoadSlides()
 const mainStore = useMainStore()
-const { showAIPPTDialog } = storeToRefs(mainStore)
-
-const openAIPPTDialog = () => mainStore.setAIPPTDialogState(true)
-const closeAIPPTDialog = () => mainStore.setAIPPTDialogState(false)
 
 const mobileRef = useTemplateRef<HTMLElement>('mobileRef')
 const screenWidth = ref(0)

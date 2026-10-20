@@ -6,15 +6,6 @@
   >
     <div class="add-slide">
       <div class="btn" @click="createSlide()"><i-icon-park-outline:plus class="icon" />添加幻灯片</div>
-      <Popover trigger="click" placement="bottom-start" v-model:value="presetLayoutPopoverVisible" center>
-        <template #content>
-          <Templates 
-            @select="slide => { createSlideByTemplate(slide); presetLayoutPopoverVisible = false }"
-            @selectAll="({ slides, theme }) => { insertAllTemplates({ slides, theme }); presetLayoutPopoverVisible = false }"
-          />
-        </template>
-        <div class="select-btn"><i-icon-park-outline:down /></div>
-      </Popover>
     </div>
 
     <Draggable 
@@ -88,7 +79,6 @@ import useLoadSlides from '@/hooks/useLoadSlides'
 import useAddSlidesOrElements from '@/hooks/useAddSlidesOrElements'
 
 import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
-import Templates from './Templates.vue'
 import Popover from '@/components/Popover.vue'
 import Draggable from 'vuedraggable'
 

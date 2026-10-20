@@ -70,7 +70,6 @@
             <FileInput @change="files => { insertImageElement(files); imageMenuVisible = false }">
               <PopoverMenuItem center><i-icon-park-outline:upload class="icon" /> 上传图片</PopoverMenuItem>
             </FileInput>
-            <PopoverMenuItem center @click="openImageLibPanel(); imageMenuVisible = false"><i-icon-park-outline:picture class="icon" /> 在线图库</PopoverMenuItem>
           </template>
           <span class="arrow"><i-icon-park-outline:down /></span>
         </Popover>
@@ -324,9 +323,6 @@ const toggleSymbolPanel = () => {
 }
 
 // 打开图库面板
-const openImageLibPanel = () => {
-  mainStore.setImageLibPanelState(true)
-}
 </script>
 
 <style lang="scss" scoped>

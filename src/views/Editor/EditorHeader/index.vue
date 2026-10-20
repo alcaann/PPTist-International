@@ -3,16 +3,6 @@
     <div class="left">
       <Popover trigger="click" placement="bottom-start" v-model:value="mainMenuVisible">
         <template #content>
-          <div class="main-menu">
-            <div class="ai-menu" @click="openAIPPTDialog(); mainMenuVisible = false">
-              <div class="icon"><i-custom:click /></div>
-              <div class="aippt-content">
-                <div class="aippt"><span>AIPPT</span></div>
-                <div class="aippt-subtitle">输入一句话，智能生成演示文稿</div>
-              </div>
-            </div>
-          </div>
-          <Divider :margin="10" />
           <div class="import-section">
             <div class="import-label">导入文件</div>
             <div class="import-grid">
@@ -48,10 +38,7 @@
           <PopoverMenuItem class="popover-menu-item" @click="resetSlides(); mainMenuVisible = false"><i-icon-park-outline:refresh class="icon" /> 重置幻灯片</PopoverMenuItem>
           <PopoverMenuItem class="popover-menu-item" @click="openMarkupPanel(); mainMenuVisible = false"><i-icon-park-outline:mark class="icon" /> 幻灯片类型标注</PopoverMenuItem>
           <PopoverMenuItem class="popover-menu-item" @click="mainMenuVisible = false; hotkeyDrawerVisible = true"><i-icon-park-outline:command class="icon" /> 快捷操作</PopoverMenuItem>
-          <PopoverMenuItem class="popover-menu-item" @click="goLink('https://github.com/pipipi-pikachu/PPTist/issues')"><i-icon-park-outline:comment class="icon" /> 意见反馈</PopoverMenuItem>
-          <PopoverMenuItem class="popover-menu-item" @click="goLink('https://github.com/pipipi-pikachu/PPTist/blob/master/doc/Q&A.md')"><i-icon-park-outline:helpcenter class="icon" /> 常见问题</PopoverMenuItem>
-          <Divider :margin="10" />
-          <div class="statement">注：本站仅作测试/演示，不提供任何形式的服务</div>
+          <PopoverMenuItem class="popover-menu-item" @click="goLink('https://github.com/alcaann/PPTist-International/issues')"><i-icon-park-outline:comment class="icon" /> 意见反馈</PopoverMenuItem>
         </template>
         <div class="menu-item"><i-icon-park-outline:hamburger-button class="icon" /></div>
       </Popover>
@@ -86,13 +73,10 @@
           <div class="arrow-btn"><i-icon-park-outline:down class="arrow" /></div>
         </Popover>
       </div>
-      <div class="menu-item" v-tooltip="'AI生成PPT'" @click="openAIPPTDialog(); mainMenuVisible = false">
-        <span class="text ai">AI</span>
-      </div>
       <div class="menu-item" v-tooltip="'导出'" @click="setDialogForExport('pptx')">
         <i-icon-park-outline:download class="icon" />
       </div>
-      <a class="github-link" v-tooltip="'Copyright © 2020-PRESENT pipipi-pikachu'" href="https://github.com/pipipi-pikachu/PPTist" target="_blank">
+      <a class="github-link" v-tooltip="'PPTist International: source (AGPL-3.0). Based on PPTist, Copyright © 2020-PRESENT pipipi-pikachu'" href="https://github.com/alcaann/PPTist-International" target="_blank">
         <div class="menu-item"><i-icon-park-outline:github class="icon" /></div>
       </a>
     </div>
@@ -165,10 +149,6 @@ const setDialogForExport = (type: DialogForExportTypes) => {
 const openMarkupPanel = () => {
   mainStore.setMarkupPanelState(true)
 }
-
-const openAIPPTDialog = () => {
-  mainStore.setAIPPTDialogState(true)
-}
 </script>
 
 <style lang="scss" scoped>
@@ -204,12 +184,6 @@ const openAIPPTDialog = () => {
     text-align: center;
     font-size: 17px;
   }
-  .ai {
-    background: linear-gradient(270deg, #d897fd, #33bcfc);
-    background-clip: text;
-    color: transparent;
-    font-weight: 700;
-  }
 
   &:hover {
     background-color: #f1f1f1;
@@ -230,43 +204,6 @@ const openAIPPTDialog = () => {
   padding: 8px 10px;
   font-style: italic;
 }
-.main-menu {
-  width: 300px;
-}
-.ai-menu {
-  background: linear-gradient(270deg, #f8edff, #d4f1ff);
-  color: $themeColor;
-  border-radius: $borderRadius;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  .icon {
-    font-size: 22px;
-    margin-right: 16px;
-  }
-  .aippt-content {
-    display: flex;
-    flex-direction: column;
-  }
-  .aippt {
-    font-weight: 700;
-    font-size: 16px;
-
-    span {
-      background: linear-gradient(270deg, #d897fd, #33bcfc);
-      background-clip: text;
-      color: transparent;
-    }
-  }
-  .aippt-subtitle {
-    font-size: 12px;
-    color: #777;
-    margin-top: 5px;
-  }
-}
-
 .import-section {
   padding: 5px 0;
 

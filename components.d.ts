@@ -11,7 +11,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    'ICustom:click': typeof import('~icons/custom/click')['default']
     'ICustom:fileJpg': typeof import('~icons/custom/file-jpg')['default']
     'ICustom:filePpt': typeof import('~icons/custom/file-ppt')['default']
     'ICustom:filePptist': typeof import('~icons/custom/file-pptist')['default']
@@ -77,7 +76,6 @@ declare module 'vue' {
     'IIconParkOutline:graphicDesign': typeof import('~icons/icon-park-outline/graphic-design')['default']
     'IIconParkOutline:group': typeof import('~icons/icon-park-outline/group')['default']
     'IIconParkOutline:hamburgerButton': typeof import('~icons/icon-park-outline/hamburger-button')['default']
-    'IIconParkOutline:helpcenter': typeof import('~icons/icon-park-outline/helpcenter')['default']
     'IIconParkOutline:highLight': typeof import('~icons/icon-park-outline/high-light')['default']
     'IIconParkOutline:indentLeft': typeof import('~icons/icon-park-outline/indent-left')['default']
     'IIconParkOutline:indentRight': typeof import('~icons/icon-park-outline/indent-right')['default']
@@ -119,7 +117,6 @@ declare module 'vue' {
     'IIconParkOutline:screenshotOne': typeof import('~icons/icon-park-outline/screenshot-one')['default']
     'IIconParkOutline:search': typeof import('~icons/icon-park-outline/search')['default']
     'IIconParkOutline:selected': typeof import('~icons/icon-park-outline/selected')['default']
-    'IIconParkOutline:send': typeof import('~icons/icon-park-outline/send')['default']
     'IIconParkOutline:sendToBack': typeof import('~icons/icon-park-outline/send-to-back')['default']
     'IIconParkOutline:sentToBack': typeof import('~icons/icon-park-outline/sent-to-back')['default']
     'IIconParkOutline:SentToBack': typeof import('~icons/icon-park-outline/sent-to-back')['default']

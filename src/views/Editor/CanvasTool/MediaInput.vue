@@ -57,8 +57,8 @@ const emit = defineEmits<{
 
 const type = ref<TypeKey>('video')
 
-const videoSrc = ref('https://videos.pexels.com/video-files/29261597/12623866_640_360_24fps.mp4')
-const audioSrc = ref('https://freesound.org/data/previews/614/614107_11861866-lq.mp3')
+const videoSrc = ref('')
+const audioSrc = ref('')
 
 const tabs: TabItem[] = [
   { key: 'video', label: '视频' },

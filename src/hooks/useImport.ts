@@ -12,7 +12,6 @@ import useSlideHandler from '@/hooks/useSlideHandler'
 import useHistorySnapshot from './useHistorySnapshot'
 import message from '@/utils/message'
 import { getSvgPathRange, toPoints } from '@/utils/svgPathParser'
-import { loadGoogleFonts } from '@/utils/font'
 import type {
   Slide,
   TableCellStyle,
@@ -679,7 +678,6 @@ export default () => {
         return
       }
 
-      if (json.usedFonts && json.usedFonts.length) loadGoogleFonts(json.usedFonts)
 
       let ratio = 96 / 72
       const width = json.size.width
