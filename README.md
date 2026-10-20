@@ -1,329 +1,128 @@
-# PPTist International
-
-**Try it: [alcaann.github.io/PPTist-International](https://alcaann.github.io/PPTist-International/)**
-(built and audited by `.github/workflows/deploy.yml` on every push; decks stay in your browser).
-
-A fork of [PPTist](https://github.com/pipipi-pikachu/PPTist) by pipipi-pikachu (AGPL-3.0) that
-changes three things and nothing else in the editor:
-
-- **English UI**, translated at build time from a dictionary, so the source stays as upstream
-  wrote it and updates merge cleanly. Other languages are one JSON file each: see
-  [i18n/README.md](i18n/README.md); contributions welcome.
-- **No third-party connections.** The AI features (AI slides, AI writing) and the online image
-  library, which went through the author's server, are removed, not hidden; so are the built-in
-  templates (Chinese text, photos fetched from pexels.com), the Google Fonts loader and the
-  sample media URLs. The built page carries a Content-Security-Policy that lets it contact only
-  the server it came from.
-- **Decks as files** (`src/deck-bridge.ts`): with `?deck=edit` the editor loads and saves a plain
-  JSON deck through a small local server (`GET/PUT ../api/deck`); `?deck=player` plays a
-  `deck.json` next to the page read-only; `?deck=view` is a slideshow another page drives with
-  `postMessage({deckSlide: n})`. Without `?deck=` it behaves as upstream (browser storage).
-
-**Checked, not promised:** `node audit/static.mjs` scans the built bundle (every host it names,
-every network call site, the CSP, AI/cloud vocabulary, every Chinese string left with a reason)
-and `node audit/live.mjs` runs it in headless Chrome, clicks through the UI and fails on any
-request leaving 127.0.0.1, any request the CSP had to block, or any Chinese on screen. A control
-run with an injected fetch, image and Chinese label fails as it should.
-
-```bash
-npm ci && npm run build && node audit/static.mjs && node audit/live.mjs
-```
-
-Branch `international` is upstream `master` plus these commits; upstream is merged in to stay
-current.
-
-## Help wanted
-
-PPTist is an excellent editor, and its online features are documented and optional upstream.
-This fork exists for people who need something narrower: an editor for slides that may be
-confidential (unpublished research, internal material), in their own language, whose build
-they can **check** sends nothing anywhere, rather than take on trust. Two kinds of help make
-that more useful:
-
-- **Translations.** One JSON file per language, no code: [i18n/README.md](i18n/README.md).
-  Corrections to the English wording are just as welcome.
-- **Review.** Try to break the guarantee. A request the audits miss, a dependency that phones
-  home, a way around the Content-Security-Policy, a Chinese string that reaches the screen:
-  please open an issue (for anything exploitable, say so in the title and leave out the
-  details until it is fixed). Improvements to `audit/` itself are the most valuable kind of
-  pull request here.
-
-Everything below is upstream's README.
-
----
-
 <p align="center">
     <img src='/public/logo.png' />
 </p>
 
-[![GitHub stars](https://img.shields.io/github/stars/pipipi-pikachu/PPTist)](https://www.github.com/pipipi-pikachu/PPTist/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/pipipi-pikachu/PPTist)](https://www.github.com/pipipi-pikachu/PPTist/network/members)
-[![GitHub issues](https://img.shields.io/github/issues-closed/pipipi-pikachu/PPTist)](https://github.com/pipipi-pikachu/PPTist/issues)
-[![license](https://img.shields.io/github/license/pipipi-pikachu/PPTist)](https://www.github.com/pipipi-pikachu/PPTist/blob/master/LICENSE)
-[![Gitee stars](https://gitee.com/pptist/PPTist/badge/star.svg?theme=gvp)](https://gitee.com/pptist/PPTist)
-[![Gitcode stars](https://gitcode.com/pipipi-pikachu/PPTist/star/badge.svg)](https://gitcode.com/pipipi-pikachu/PPTist)
+# PPTist International
 
-[简体中文](README_zh.md) | English
+A PowerPoint-style slide editor that runs in the browser: text, images, shapes, lines, charts,
+tables, video, audio and LaTeX formulas, with themes, transitions, animations, speaker notes and
+a presenter view. It imports and exports `.pptx`.
 
+**Try it: [alcaann.github.io/PPTist-International](https://alcaann.github.io/PPTist-International/)**
+(decks stay in your browser; nothing is uploaded).
 
-# 🎨 PPTist
-**PowerPoint-ist（/'pauəpɔintist/）**, A web-based presentation (slideshow) application. This application replicates most of the commonly used features of Microsoft Office PowerPoint. It supports various essential element types such as text, images, shapes, lines, charts, tables, videos, audio, and formulas. You can edit and present slides directly in a web browser.
+This is a fork of [PPTist](https://github.com/pipipi-pikachu/PPTist) by
+[pipipi-pikachu](https://github.com/pipipi-pikachu), whose editor it is. The fork changes three
+things:
 
-**Try it online👉：[https://pipipi-pikachu.github.io/PPTist/](https://pipipi-pikachu.github.io/PPTist/)**
+- **The interface is in English** (and can be in any language), translated at build time.
+- **It makes no third-party connections.** Upstream's AI features, online image library,
+  built-in templates and web-font loader are removed, and the page may contact only the
+  server it came from.
+- **Decks can be plain JSON files**, loaded and saved through a small local server, so they
+  can live in a git repository.
 
-> China Mirrors (Synchronized Regularly): [Gitee](https://gitee.com/pptist/PPTist)、[GitCode](https://gitcode.com/pipipi-pikachu/PPTist)
+## Checked, not promised
 
+Two audits run on every build, here and in CI, and the demo above is published only if both pass:
 
-# ✨ Highlights
-1. **Easy Development**: Built with Vue 3.x and TypeScript, it does not rely on UI component libraries, making styling customization easier and functionality extension more convenient.
-2. **User Friendly**: It offers context menus everywhere, dozens of shortcut operations, and continuously refined editing details, striving to replicate a desktop application-level experience.
-3. **Feature Rich**: Supports most commonly used Office PPT elements and features, supports template-based AIPPT, supports exporting in various formats, and offers basic editing and previewing on mobile devices.
-4. **Controllable Code**: Not a temporary product of vibe coding. The code is robust, controllable, easy to maintain, and leaves no technical debt.
+- **`audit/static.mjs`** scans the built bundle. It checks every host the code names (each one
+  is reviewed, and a new one fails until someone looks at it), every network call site, the
+  Content-Security-Policy, and AI or cloud vocabulary. Every Chinese string left in the bundle
+  must have a stated reason, for example a library's built-in locale that is never shown.
+- **`audit/live.mjs`** runs the editor in headless Chrome, clicks through about 60 controls,
+  inserts content, and opens the slideshow. It fails on any request leaving the local server,
+  any request the security policy had to block (meaning some code still *tried*), and any
+  Chinese on screen.
 
+A control run with an injected fetch, an external image and a Chinese label fails, as it should.
 
-# 👀 Front-Row Reminder
-1. The target audience for this project is developers with web slide development needs and basic web development experience. The provided link is for demonstration purposes only and does not offer any online services. This project should not be used directly as a tool, nor does it support out-of-the-box use. If you simply need a ready-made service or tool, please consider other products.
-2. Here are some summarized [Frequently Asked Questions](/doc/Q&A.md). When raising Issues or submitting PRs for the first time, be sure to read this document in advance.
-3. For commercial use, please refer to [商业用途](#-商业用途)
+## Quick start
 
+Node 20 or newer.
 
-# 🧩 Project Positioning
-> The core positioning of this project is a **Web Slide Editing/Presentation Application**. The following are the recommendation levels for common use cases:
-
-- **Low-code Platforms / H5 Editors / Image Editors / Whiteboards** (Recommendation: Not Recommended): We suggest choosing open-source projects that better match those scenarios.
-- **AI PPT Generation Tool** (Recommendation: ⭐⭐): This project supports a template-based AIPPT generation approach, and also provides a data structure definition for AI to directly generate page data. See `AI_PPT_SCHEMA.md`. In theory, it supports non-template PPT generation, where AI directly generates PPTist data. Note that the final result of AIPPT depends heavily on model capabilities, prompt design, asset generation/retrieval, and other factors. PPTist is better suited as a foundation for carrying, editing, and further processing structured generation results, rather than an out-of-the-box complete AIPPT commercial solution.
-- **PPT File Preview Tool** (Recommendation: ⭐⭐): This project supports importing PPTX files and can cover many common page contents and styles (roughly 85%+ fidelity overall), making it suitable for online preview, lightweight review, and content browsing. However, because the PPTX ecosystem is complex, animations, special charts, deeply nested structures, non-standard elements, and some advanced styles may inevitably have fidelity differences. If your business requires pixel-perfect fidelity, evaluate with your actual sample files.
-- **Office PPT Authoring Tool** (Recommendation: ⭐⭐): This project supports many common Office PPT features and can import/export local PPTX files, making it usable as a foundation for online authoring and editing. Note that full Office PPT compatibility involves many details, including complex layouts, animations, charts, themes, and masters. Some details will inevitably be lost during file import/export, so 100% fidelity cannot be guaranteed. If your core goal is to fully replace Microsoft PowerPoint, evaluate and make trade-offs with your actual business documents.
-- **Web Slide Editing/Presentation App** (Recommendation: ⭐⭐⭐⭐⭐): This is the most recommended scenario. The core strengths of PPTist are its editing capabilities and editing experience. You can build upon this project to customize or add unique nodes and features according to your needs, without using import/export as the ultimate goal. After all, those customized things do not exist in Office PPT. **Summary: I hope you use PPTist to build a presentation product different from Office PPT, rather than just an editing relay station for Office PPT.**
-
-
-# 🚀 Installation
-> node.js version >= 20
-
+```bash
+npm ci --ignore-scripts
+npm run dev                          # http://127.0.0.1:5173/
+npm run build                        # dist/
+node audit/static.mjs && node audit/live.mjs
 ```
-npm install
 
-npm run dev
+### What gets removed, and why
+
+| Upstream feature | Contacted | In this fork |
+|---|---|---|
+| AI slide generation, AI rewrite/expand/shorten | the author's server | removed |
+| Online image library | the author's server (Pexels photos) | removed |
+| Built-in templates | pexels.com (photos); Chinese sample text | removed |
+| Google Fonts loader on import | fonts.googleapis.com | removed |
+| Sample video/audio URLs | third-party media hosts | emptied |
+| Package downloads | a mirror registry (in the lockfile) | official npm registry, same hashes |
+
+Everything else works as upstream: import and export (PPTX, JSON, images, PDF via print),
+editing, charts, tables, formulas, animations, slideshow tools and the mobile view.
+
+### Decks as files
+
+`src/deck-bridge.ts` adds three modes, chosen in the URL:
+
+| URL | What it does |
+|---|---|
+| `?deck=edit` | loads the deck from `GET ../api/deck` and saves it back with `PUT`, about a second after each change; if the file changed on disk meanwhile (HTTP 409), it stops saving and says so |
+| `?deck=view` | a slideshow another page drives with `postMessage({deckSlide: n})` |
+| `?deck=player` | plays a `deck.json` next to the page, read-only (for publishing a talk) |
+
+Without `?deck=` the editor behaves as upstream and keeps the deck in browser storage. The
+server side is small and can be written in any language: it serves `dist/`, answers `GET /api/deck` with
+`{version, deck}`, and accepts `PUT /api/deck` with `{version, deck}`.
+
+## Help wanted
+
+PPTist is an excellent editor, and upstream documents its online features and makes them optional.
+This fork is for people who need something narrower: an editor for slides that may be
+confidential (unpublished research, internal material), in their own language, whose build
+they can **check** sends nothing anywhere instead of taking it on trust. Two kinds of help make
+that more useful:
+
+- **Translations.** One JSON file per language, no code: see [i18n/README.md](i18n/README.md).
+  Corrections to the English wording are just as welcome. The developer docs in `doc/` are
+  still upstream's Chinese originals; English versions would help too.
+- **Review.** Try to break the guarantee. A request the audits miss, a dependency that phones
+  home, a way around the Content-Security-Policy, or a Chinese string that reaches the screen:
+  please [open an issue](https://github.com/alcaann/PPTist-International/issues). For anything
+  exploitable, say so in the title and leave out the details until it is fixed. Improvements to
+  `audit/` itself are the most valuable kind of pull request here.
+
+## Staying current with upstream
+
+Branch `international` is upstream's `master` plus a short series of commits. Upstream's source
+files are left as they are wherever possible (translation happens at build time), so merging
+is usually clean:
+
+```bash
+git fetch upstream && git merge upstream/master
+node i18n/extract.mjs . --missing    # new strings to translate; the build refuses until done
+npm run build && node audit/static.mjs && node audit/live.mjs
 ```
-Browser access: http://127.0.0.1:5173/
 
+A new feature upstream that contacts a server makes the audits fail, and it stays out until
+someone has looked at it.
 
-# 📚 Features
-### Basic Features
-- History (undo, redo)
-- Shortcuts
-- Right-click menu
-- Import: PPTX (overall fidelity ~85%+), JSON, pptist files
-- Export: PPTX (overall fidelity ~95%+), JSON, images, PDF (print), pptist files
-- Template-based AI PPT generation
-### Slide Page Editing
-- Add/delete pages
-- Copy/paste pages
-- Adjust page order
-- Create sections
-- Background settings (solid color, gradient, image)
-- Set canvas size
-- Gridlines
-- Rulers
-- Canvas zoom and move
-- Theme settings
-- Extract slides style
-- Speaker notes (rich text)
-- Slide templates
-- Transition animations
-- Element animations (entrance, exit, emphasis)
-- Selection panel (hide elements, layer sorting, element naming)
-- Labels for Page and Node Types (usable for template-related features)
-- Find/replace
-- Annotations
-### Slide Element Editing
-- Add/delete elements
-- Copy/paste elements
-- Drag and move elements
-- Rotate elements
-- Scale elements
-- Multiple element selection (marquee, point selection)
-- Group multiple elements
-- Batch edit multiple elements
-- Lock elements
-- Magnetic alignment of elements (move and scale)
-- Adjust element layer
-- Align elements to canvas
-- Align elements to other elements
-- Evenly distribute multiple elements
-- Drag to add text and images
-- Paste external images
-- Set element coordinates, size, and rotation
-- Element hyperlinks (link to webpage, link to other slide pages)
-- Element bubble menu (Floating toolbar)
-#### Text
-- Rich text editing (color, highlight, font, font size, bold, italic, underline, strikethrough, subscript, inline code, quote, hyperlink, alignment, numbering, bullet points, paragraph indent, clear formatting)
-- Line height
-- Character spacing
-- Paragraph spacing
-- First line indent
-- Fill color
-- Border
-- Shadow
-- Transparency
-- Vertical text
-- Text box margins
-- Auto-fit/fixed height (vertical alignment can be selected when fixed)
-- AI Rewrite/Expand/Abbreviate
-#### Images
-- Crop (custom, shape, aspect ratio)
-- Rounding
-- Filters
-- Tint (mask)
-- Flip
-- Border
-- Shadow
-- Replace image
-- Reset image
-- Set as background
-#### Shapes
-- Freehand draw any polygon
-- Freehand draw any line (unclosed shape simulation)
-- Visual path creation method
-- Replace shape
-- Fill (solid color, gradient, image)
-- Border
-- Shadow
-- Transparency
-- Flip
-- Shape format painter
-- Edit text (supports rich text, similar to text element’s rich text editing)
-- Text box margins
-- Text vertical alignment
-#### Lines
-- Straight lines, polylines, curves
-- Color
-- Width
-- Style (solid, dashed, dotted)
-- Endpoint style
-#### Charts (bar, column, line, area, scatter, pie, donut, radar)
-- Chart type conversion
-- Data editing
-- Background fill
-- Theme color
-- Coordinate system and axis text color
-- Grid color
-- Other chart settings
-- Border
-#### Tables
-- Add/delete rows and columns
-- Theme settings (theme color, header, total row, first column, last column)
-- Merge cells
-- Cell styles (fill color, text color, bold, italic, underline, strikethrough, alignment)
-- Border
-#### Video
-- Preview cover settings
-- Auto play
-#### Audio
-- Icon color
-- Auto play
-- Loop play
-#### Formulas
-- LaTeX editing
-- Color settings
-- Formula line thickness settings
-### Slide Show
-- Brush tools (pen/shape/arrow/highlighter annotation, eraser, blackboard mode)
-- Preview all slides
-- Bottom thumbnails navigation
-- Timer tool
-- Laser pointer
-- Auto play
-- Speaker view
-- Audience view
-### Mobile
-- Basic editing
-  - Add/delete/copy/note/undo redo pages
-  - Insert text, images, rectangles, circles
-  - General element operations: move, scale, rotate, copy, delete, layer adjust, align
-  - Element styles: text (bold, italic, underline, strikethrough, font size, color, alignment), fill color
-- Basic preview
-- Play preview
+## For developers
 
+Upstream's documentation applies unchanged, except for the removed features above. It is in
+Chinese: [project structure and data](doc/DirectoryAndData.md), [canvas and
+elements](doc/Canvas.md), [custom elements](doc/CustomElement.md), [FAQ](doc/Q&A.md).
+Upstream's full README, with the complete feature list, is kept in
+[README.upstream.md](README.upstream.md) ([Chinese](README_zh.md)).
 
-# 👀 FAQ
-Some common problems: [FAQ](/doc/Q&A.md)
+## Credit and licence
 
+The editor is the work of pipipi-pikachu and PPTist's contributors: Copyright © 2020-present
+[pipipi-pikachu](https://github.com/pipipi-pikachu). If it is useful to you, consider supporting
+the original project (see [README.upstream.md](README.upstream.md#-sponsorship--support)).
 
-# 🎯 Supplement
-There is currently no complete development documentation, but the following documents may be of some help to you:
-- [Project Directory and Data Structure](/doc/DirectoryAndData.md)
-- [Fundamentals of Canvas and Elements](/doc/Canvas.md)
-- [How to Customize an Element](/doc/CustomElement.md)
-- [About AIPPT](/doc/AIPPT.md)
-
-Here are some auxiliary development tools/repositories:
-- Import PPTX file reference: [pptxtojson](https://github.com/pipipi-pikachu/pptxtojson)
-- Draw shape: [svgPathCreator](https://github.com/pipipi-pikachu/svgPathCreator)
-
-
-# 📄 License
-[AGPL-3.0 License](https://github.com/pipipi-pikachu/PPTist/blob/master/LICENSE) | Copyright © 2020-PRESENT [pipipi-pikachu](https://github.com/pipipi-pikachu)
-
-
-# 💕 Sponsorship & Support
-Thank you for your interest in and support for PPTist! Sponsorships from companies, organizations, and individuals are welcome.
-
-### Corporate/Organization Sponsorship
-- Price: RMB 2,399 per quarter;
-- Benefits: A sponsor showcase in [README.md](/README.md), including your logo, link, and brief introduction;
-- If you are interested in sponsoring the project, please [email the author](mailto:pipipi_pikachu@163.com) first to confirm the showcase content, sponsorship period, and other details.
-
-### Individual Sponsorship
-Individuals can support the project directly through [Afdian](https://afdian.com/a/pipipi-pikachu). Thank you for your support!
-
-
-# 🧮 Commercial
-If you wish to use this project for commercial gain, I hope you will respect open source and strictly adhere to the AGPL-3.0 license, giving back to the open source community. Or contact the author for an independent commercial license.
-
-
-
-
-
-# 🧮 商业用途
-## 商用须知
-- 本项目禁止闭源商用，如果你希望将其用于商业项目，请尊重开源，**严格遵循 [AGPL-3.0 协议](https://www.gnu.org/licenses/agpl-3.0.html)**，回馈开源社区；
-- 如果你因为任何原因，无法执行 AGPL-3.0 协议，可以选择：
-    1. 使用 Apache 2.0 协议版本（最后更新时间为2022年5月，已停止维护，[点此下载](https://github.com/pipipi-pikachu/PPTist/archive/f1a35bb8e045124e37dcafd6acbf40b4531b69aa.zip)）；
-    2. 成为项目的重要贡献者（先违反协议后再成为贡献者不适用此项），包括：
-        - 你的代码被本项目作为依赖引用，包括：npm安装、文件引用、代码片段引用（引用处会注明）；
-        - 你给本项目提交过重要的 PR 或 Issue（由作者主观判断，符合的 PR 或 Issue 会打上`important contribution`标签）；
-    3. [邮件联系作者](mailto:pipipi_pikachu@163.com)付费获取独立的商业授权（违反协议后被作者找到的不适用此项）。独立授权价格：
-        - 一年：2999元；
-        - 永久：5999元（不含税）；
-    4. 一次性赞助本项目一年及以上（见[赞助与支持](#-赞助与支持)），可联系作者获取永久商业授权；
-- 请优先考虑执行AGPL-3.0协议，如需付费获取独立的商业授权，请务必在联系作者前阅读以下内容：
-    - **独立商业授权表示**：
-        - 作者单独出具商业授权协议文件（邮件联系作者获取），双方按流程签署协议；
-        - 允许将代码用于商业行为，且不必执行 AGPL-3.0 协议；
-        - 授权对象可以是个人或组织（企业），允许授权对象名下的所有产品使用本项目代码；
-    - **授权流程**：
-        1. 被授权方确认协议内容，若无异议，需提供协议中所需的个人/企业信息；
-        2. 由作者补充好协议双方信息后打印签字，并将电子扫描件发给被授权方；
-        3. 被授权方收到后，将协议打印盖章，再扫描电子档发回给作者，此时协议开始生效；
-        4. 被授权方在协议规定时间内支付费用，并保留好支付凭证，授权结束；
-    - **授权不等于出售软件或服务**：
-        - 不存在其他“商业版本”、不提供任何API/SDK/在线服务/技术支持/技术咨询/定制开发；
-        - 不提供可直接交付的产品，你仍需从本仓库获取代码自行开发；
-        - 该软件无法开箱即用，至少也得自行接入后端能力（需要有最基本的web开发经验）；
-        - 不保证未来版本的兼容性，不保证代码没有bug；
-        - 作者不承担任何因使用本项目代码而导致的直接或间接损失；
-        - 务必提前做好调研，判断该软件是否符合需求，包括但不限于功能（是否能满足业务需求）和开发（是否上手当前技术栈/实现方案）；
-- 不接受[黑名单/耻辱柱](/doc/Blacklist.md)或存在违反协议行为的对象通过任何形式获取商业授权；
-- 作者倡导异步沟通（正式、信息整合度高），**不加私人微信/QQ/手机号等**，有任何授权相关疑问请邮件联系，谢谢理解；
-- 提需求/报bug/询问技术方案等非授权相关咨询，请在 [Issues](https://github.com/pipipi-pikachu/PPTist/issues) 中进行。
-
-## AGPL-3.0 协议
-协议核心要求用通俗的语言解释如下：
-- **开源义务**：如果你用了 AGPL 的代码，无论你或你的下游怎么使用/修改，都必须把你最终的代码全部完整公开出来，并继续以 AGPL 协议开源（强调：必须延续 AGPL 协议，保持开源的传染性，不能更换其他协议）。
-- **网络服务也要开源**：即使你只是用 AGPL 的代码做了一个网站或网络服务，别人通过网络用你的服务时，你也需要遵守上一条**开源义务**。
-- **保留版权声明**：你不能删掉代码里原来的作者信息和许可证声明，得告诉大家这代码是从哪儿来的。
-- **不能加额外限制**：你不能在衍生出来的 AGPL 代码上加一些限制，比如不让别人再分发代码，或者要求别人付费才能使用代码（包括但不限于：要求别人购买授权/服务/产品等）。
-- **免责声明**：作者不保证代码没有 bug，也不对使用后果负责。
-
-> 详细协议内容见官方文档：[AGPL-3.0 协议](https://www.gnu.org/licenses/agpl-3.0.html)
+Licensed under [AGPL-3.0](LICENSE), like upstream, and this fork's changes are AGPL-3.0 as well.
+If you host a modified version, its source must be available to its users. Upstream also
+offers separate commercial licences for closed-source commercial use. They cover upstream's
+code only, and this fork cannot grant them.
