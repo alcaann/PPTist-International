@@ -1,5 +1,8 @@
 # PPTist International
 
+**Try it: [alcaann.github.io/PPTist-International](https://alcaann.github.io/PPTist-International/)**
+(built and audited by `.github/workflows/deploy.yml` on every push; decks stay in your browser).
+
 A fork of [PPTist](https://github.com/pipipi-pikachu/PPTist) by pipipi-pikachu (AGPL-3.0) that
 changes three things and nothing else in the editor:
 
