@@ -20,7 +20,8 @@ things:
   built-in templates and web-font loader are removed, and the page may contact only the
   server it came from.
 - **Decks can be plain JSON files**, loaded and saved through a small local server, so they
-  can live in a git repository.
+  can live in a git repository, and **several people can edit one deck at once**: changes are
+  merged slide by slide and element by element.
 
 ## Checked, not promised
 
@@ -37,6 +38,9 @@ Two audits run on every build, here and in CI, and the demo above is published o
 
 A control run with an injected fetch, an external image and a Chinese label fails, as it should.
 
+Two tests cover the collaboration code: `audit/merge.mjs` (the three-way merge) and
+`audit/collab.mjs` (two editors in headless Chrome changing one deck at the same time).
+
 ## Quick start
 
 Node 20 or newer.
@@ -45,7 +49,7 @@ Node 20 or newer.
 npm ci --ignore-scripts
 npm run dev                          # http://127.0.0.1:5173/
 npm run build                        # dist/
-node audit/static.mjs && node audit/live.mjs
+node audit/static.mjs && node audit/live.mjs && node audit/merge.mjs && node audit/collab.mjs
 ```
 
 ### What gets removed, and why
@@ -68,13 +72,23 @@ editing, charts, tables, formulas, animations, slideshow tools and the mobile vi
 
 | URL | What it does |
 |---|---|
-| `?deck=edit` | loads the deck from `GET ../api/deck` and saves it back with `PUT`, about a second after each change; if the file changed on disk meanwhile (HTTP 409), it stops saving and says so |
+| `?deck=edit` | loads the deck from `GET ../api/deck`, saves it back with `PUT` about a second after each change, and every 2 s takes in changes saved by anyone else (see below) |
 | `?deck=view` | a slideshow another page drives with `postMessage({deckSlide: n})` |
 | `?deck=player` | plays a `deck.json` next to the page, read-only (for publishing a talk) |
 
 Without `?deck=` the editor behaves as upstream and keeps the deck in browser storage. The
 server side is small and can be written in any language: it serves `dist/`, answers `GET /api/deck` with
-`{version, deck}`, and accepts `PUT /api/deck` with `{version, deck}`.
+`{version, deck}` (or `{version, unchanged: true}` when asked with `?v=<current version>`),
+and accepts `PUT /api/deck` with `{version, deck}` only if `version` is still the current
+one, answering 409 otherwise.
+
+**Several editors on one deck.** Each editor remembers the version its edits started from.
+When the deck on the server has moved on (another editor, a `git pull`), it merges the newer
+deck into its own (`src/deck-merge.ts`) and saves the result. Whatever only one side changed
+is kept, so two people can work on different slides, or on different elements of the same
+slide, at the same time. If both change the same property of the same element within a
+couple of seconds, the later save wins and that editor shows a warning. Undo takes back only
+your own changes: the undo history is rebased onto other people's edits as they arrive.
 
 ## Help wanted
 
@@ -102,7 +116,7 @@ is usually clean:
 ```bash
 git fetch upstream && git merge upstream/master
 node i18n/extract.mjs . --missing    # new strings to translate; the build refuses until done
-npm run build && node audit/static.mjs && node audit/live.mjs
+npm run build && node audit/static.mjs && node audit/live.mjs && node audit/merge.mjs && node audit/collab.mjs
 ```
 
 A new feature upstream that contacts a server makes the audits fail, and it stays out until
