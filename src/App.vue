@@ -47,10 +47,11 @@ onMounted(async () => {
     }])
     screenStore.setScreening(true)
   }
-  else if (!(await deckLoad())) {
-    const slides = await api.getMockData('slides')
-    slidesStore.setSlides(slides)
-
+  else {
+    if (!(await deckLoad())) {
+      const slides = await api.getMockData('slides')
+      slidesStore.setSlides(slides)
+    }
     await deleteDiscardedDB()
     snapshotStore.initSnapshotDatabase()
   }
