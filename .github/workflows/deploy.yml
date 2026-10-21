@@ -45,6 +45,12 @@ jobs:
       - name: Live audit (headless Chrome)
         run: node audit/live.mjs
 
+      - name: Merge tests
+        run: node audit/merge.mjs
+
+      - name: Two editors on one deck (headless Chrome)
+        run: node audit/collab.mjs
+
       - name: Upload
         uses: actions/upload-pages-artifact@v3
         with:
